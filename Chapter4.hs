@@ -362,19 +362,11 @@ blackWhite n
   | n<=1	     = black
   | otherwise = black `beside` whiteBlack (n-1)
 
-whiteBlack n
-  | n<=1             = white
-  | otherwise = white `beside` blackWhite (n-1)
-
 blackChess :: Integer -> Integer -> Picture
 
 blackChess n m
   | n<=1	     = blackWhite m
   | otherwise = blackWhite m `above` whiteChess (n-1) m
-
-whiteChess n m
-  | n<=1             = whiteBlack m
-  | otherwise        = whiteBlack m `above` blackChess (n-1) m
 
 -- 4.1
 
@@ -443,80 +435,6 @@ fourPics6 p =
   top = p `beside` inverseReflect
   bottom = invertColour top
 
-maxThreeOccurs :: Int -> Int -> Int -> (Int, Int)
-maxThreeOccurs a b c
-  |threeEqual n1 n2 n3     = (m, 3)
-  |(a==b && a==m) || (b==c && b==m) || (a==c && c==m)   = (m, 2)
-  |otherwise            = (m, 1)
-  where
-  n1 = fromIntegral a
-  n2 = fromIntegral b
-  n3 = fromIntegral c
-  m = maxThree a b c
-
-data MyResult = Win | Lose | Draw
-     deriving (Show, Eq)
-
-outcome :: Move -> Move -> MyResult
-outcome x y
-  |x == y           = Draw
-  |(x == beat y)    = Win
-  |(x == lose y)    = Lose
-
-data Temp = Cold | Hot
-     deriving (Eq, Show, Ord)
-
-data Season = Spring | Summer | Winter | Autumn
-     deriving (Eq, Show)
-
-tempFromSeason :: Season -> Temp
-tempFromSeason season
-               | season == Winter   = Cold
-               | season == Summer   = Hot
-               | season == Autumn   = Cold
-               | season == Spring   = Cold
-
-data Month = January
-     | February
-     | March
-     | April
-     | May
-     | June
-     | July
-     | August
-     | September
-     | October
-     | November
-     | December
-     deriving (Show, Eq, Ord)
-
-isSpring, isSummer, isAutumn, isWinter :: Month -> Bool
-isWinter m = (m == December) || (m == January) || (m == February)
-isSpring m = (m == March) || (m == April) || (m == May)
-isSummer m = (m == June) || (m == July) || (m == August)
-isAutumn m = (m == September) || (m == October) || (m == November)
-
-whatSeason :: Month -> Season
-whatSeason m
-           |isSpring m    = Spring
-           |isSummer m   = Summer
-           |isAutumn m   = Autumn
-           |isWinter m   = Winter
-
--- Find product: m * (m+1) * ... * (n-1) * n
-rangeProduct :: Integer -> Integer -> Integer
-rangeProduct m n
-             |(n < m)       = 0
-             |(m == n)      = m
-             |(m+1 == n)    = m * n
-             |otherwise     = m * rangeProduct (m+1) (n-1) * n
-
-fac2 :: Integer -> Integer
-fac2 x
-    |(x < 0)            = 0
-    |(x==0 || x==1)     = x
-    |otherwise          = rangeProduct 1 x
-
 sumN :: Integer -> Integer
 sumN n
      |n==0      = 0
@@ -526,58 +444,4 @@ productN :: Integer -> Integer
 productN n
         |n==1        = 1
         |otherwise   = productN (n-1) * n
-
-square :: Integer -> Integer
-square n = n * n
-
-mySqrt :: Integer -> Integer
-mySqrt n = sqrtIter n 1
-
--- Recursive definition of a function to find highest integer sqrt
-sqrtIter :: Integer -> Integer -> Integer
-sqrtIter n guess
-         |(square guess == n)   = guess
-         |(square next) > n     = guess
-         |otherwise             = sqrtIter n next
-         where
-         next = guess + 1
-
-
-{-
-
-Given a function f of type Integer -> Integer give a recursive definition
-of a function of type Integer -> Integer which on input n returns the
-maximum of the values f 0, f1, ..., f n. You might find the max function
-defined in section 3.4 useful.
-
-To test this function, add to your script a definition of some values of f thus:
-
-f 0 = 0
-f 1 = 44
-f 2 = 17
-f _ = 0
-
-and so on; then test your function at various values.
-
--}
-
-testFun 0 = 0
-testFun 1 = 44
-testFun 2 = 17
-
-maxFun :: (Integer -> Integer) -> Integer -> Integer -> Integer
-maxFun f n maxN
-       |(n==0)      = max (f 0) maxN
-       |otherwise   = maxFun f (n-1) (max (f n) maxN)
-
-zeroFun :: (Integer -> Integer) -> Integer -> Bool
-zeroFun f n
-        |(n==0)     = f n == 0
-        |(f n == 0) = True
-        |otherwise  = zeroFun f (n-1)
-
-picColumn :: Picture -> Integer -> Picture
-picColumn pic n
-  | n<=1      = pic
-  | otherwise = pic `above` (picColumn pic (n-1))
 

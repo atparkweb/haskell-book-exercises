@@ -11,6 +11,7 @@
 module Chapter4Exercises where
 
 import Chapter4
+import PicturesSVG
 
 {- 4.9
  - Define the function
@@ -197,10 +198,25 @@ zeroFun f n
  - Complete the definitions of whiteBlack and whiteChess.
 -}
 
+blackWhite :: Integer -> Picture
+
+blackWhite n
+  | n<=1	     = black
+  | otherwise = black `beside` whiteBlack (n-1)
+
+blackChess :: Integer -> Integer -> Picture
+
+blackChess n m
+  | n<=1	     = blackWhite m
+  | otherwise = blackWhite m `above` whiteChess (n-1) m
+
+whiteBlack :: Integer -> Picture
 whiteBlack n
   | n<=1             = white
   | otherwise = white `beside` blackWhite (n-1)
 
+
+whiteChess :: Integer -> Integer -> Picture
 whiteChess n m
   | n<=1             = whiteBlack m
   | otherwise        = whiteBlack m `above` blackChess (n-1) m
@@ -215,16 +231,22 @@ picColumn pic n
   | otherwise = pic `above` (picColumn pic (n-1))
 
 -- Functions for exercises 4.27-29
-whiteSquares :: Integer -> (Picture -> Picture -> Picture) -> Picture
-whiteSquares n positionFn
-  | n <= 1     = white
-  | otherwise  = positionFn white (whiteSquares (n-1) positionFn)
+nSquares :: Integer -> Picture -> (Picture -> Picture -> Picture) -> Picture
+nSquares n pic positionFn
+  | n <= 1     = pic
+  | otherwise  = positionFn pic (nSquares (n-1) pic positionFn)
+
+blackColumn :: Integer -> Picture
+blackColumn n = nSquares n black above
+
+blackRow :: Integer -> Picture
+blackRow n = nSquares n black beside
 
 whiteColumn :: Integer -> Picture
-whiteColumn n = whiteSquares n above
+whiteColumn n = nSquares n white above
 
 whiteRow :: Integer -> Picture
-whiteRow n = whiteSquares n beside
+whiteRow n = nSquares n white beside
 
 {- 4.27
  - Give a haskell function which takes an integer n and returns an n by n white
@@ -272,8 +294,34 @@ diagonalBoth :: Integer -> Picture
 diagonalBoth n
   | n <= 1         = black
   | n == 2         = (black `beside` black) `above` (black `beside` black)
-  | otherwise      = borderTop `above` (borderSide `beside` diagonalBoth (m)
-                     `beside` borderSide) `above` borderBottom
+  | otherwise      = borderTopBottom `above` (borderSide `beside` diagonalBoth (m)
+                     `beside` borderSide) `above` borderTopBottom
   where m = (n-2)
-        borderTop = borderBottom = black `beside` whiteRow x `beside` black
+        borderTopBottom = black `beside` whiteRow m `beside` black
         borderSide = whiteColumn m
+
+{- 4.30
+ - Can you give a direct recursive defintion of a function
+     chessBoard :: Integer -> Picture
+ - so that
+     chessBoard n = ... chessBoard (n-1) ...
+ - Hint: you might want to use some of the functions defined here, or variants of
+         them, in writing your definition
+-}
+
+whiteBlackColumn :: Integer -> Picture
+whiteBlackColumn n
+  | n <= 1              = white
+  | n `mod` 2 == 0      = whiteBlackColumn (n-1) `above` black
+  | otherwise           = whiteBlackColumn (n-1) `above` white
+
+blackWhiteColumn :: Integer -> Picture
+blackWhiteColumn n = invertColour (whiteBlackColumn n)
+
+chessBoard :: Integer -> Picture
+chessBoard n
+  | n <= 1              = white
+  | n `mod` 2 == 0      = (chessBoard (n-1) `beside` blackWhiteColumn (n-1))
+                          `above` blackWhite n
+  | otherwise           = (chessBoard (n-1) `beside` whiteBlackColumn (n-1))
+                          `above` whiteBlack n

@@ -356,18 +356,6 @@ blackSquares n
   | n<=1	     = black
   | otherwise = black `beside` blackSquares (n-1)
 
-blackWhite :: Integer -> Picture
-
-blackWhite n
-  | n<=1	     = black
-  | otherwise = black `beside` whiteBlack (n-1)
-
-blackChess :: Integer -> Integer -> Picture
-
-blackChess n m
-  | n<=1	     = blackWhite m
-  | otherwise = blackWhite m `above` whiteChess (n-1) m
-
 -- 4.1
 
 maxFour1, maxFour2, maxFour3 :: Int -> Int -> Int -> Int -> Int

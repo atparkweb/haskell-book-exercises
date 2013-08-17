@@ -343,3 +343,18 @@ highestCommonFactor x y z
   where small = min x y
         large = max x y
         guess = min z small     -- guess should be smaller than smaller number
+
+{- 4.32
+ - Suppose we have to raise 2 to the power of n. If n is even, 2 * m say, then
+ -    2^n = 2^(2*m) = (2^m)^2
+ - If n is odd, 2 * m+1 say, then
+ -    2^n = 2^(2*m+1) = (2^m)^2 * 2
+ - Give a recursion function to compute 2^n which uses these insights
+-}
+
+calculate2N :: Integer -> Integer
+calculate2N n
+  | n == 0      = 1
+  | n == 1      = 2
+  | even n      = (calculate2N (n `div` 2))^2
+  | otherwise   = (calculate2N ((n-1) `div` 2))^2 * 2

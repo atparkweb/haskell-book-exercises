@@ -325,3 +325,21 @@ chessBoard n
                           `above` blackWhite n
   | otherwise           = (chessBoard (n-1) `beside` whiteBlackColumn (n-1))
                           `above` whiteBlack n
+
+{- 4.31
+ - Give a recursive definition of a function to find the highest common factor of two
+ - positive integers.
+-}
+
+isFactorOf :: Integer -> Integer -> Bool
+isFactorOf x y = y `mod` x == 0
+
+highestCommonFactor :: Integer -> Integer -> Integer -> Integer
+highestCommonFactor x y z
+  | (guess `isFactorOf` small) &&
+    (guess `isFactorOf` large)  = guess
+  | otherwise                   = highestCommonFactor x y (guess-1)
+
+  where small = min x y
+        large = max x y
+        guess = min z small     -- guess should be smaller than smaller number

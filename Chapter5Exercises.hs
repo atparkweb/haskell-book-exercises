@@ -1,5 +1,7 @@
 module Chapter5Exercises where
 
+import Chapter3
+import Prelude hiding (max, min)
 import Chapter5
 import Test.HUnit
 
@@ -62,6 +64,64 @@ testMaxOccursThreeList = TestList [testMaxOccursThree1,
                              testMaxOccursThree5,
                              testMaxOccursThree6,
                              testMaxOccursThree7]
+
+{- 5.2
+ - Give a definition of a function
+ -    orderTriple :: (Integer, Integer, Integer) -> (Integer, Integer, Integer)
+ - which puts the elements of a triple of three integers into ascending order.
+ - You might like to use the maxThree, middle and minThree functions defined earlier.
+-}
+
+weakAscendingOrder :: Integer -> Integer -> Integer -> Bool
+weakAscendingOrder a b c = (a <= b) && (b <= c)
+
+weakDescendingOrder :: Integer -> Integer -> Integer -> Bool
+weakDescendingOrder a b c = (c <= b) && (b <= a)
+
+between a b c = weakAscendingOrder a b c || weakDescendingOrder a b c
+
+middleNumber :: Integer -> Integer -> Integer -> Integer
+middleNumber x y z
+  | between y x z      = x
+  | between x y z      = y
+  | otherwise          = z
+
+orderTriple :: (Integer, Integer, Integer) -> (Integer, Integer, Integer)
+orderTriple (x, y, z) = (minThree x y z, middleNumber x y z, maxThree x y z)
+
+testOrderTriple1 = TestCase(assertEqual
+                            "for: orderTriple (1, 1, 1)"
+                            (1,1,1) (orderTriple (1,1,1)))
+testOrderTriple2 = TestCase(assertEqual
+                            "for: orderTriple (1, 2, 3)"
+                            (1,2,3) (orderTriple (1,2,3)))
+testOrderTriple3 = TestCase(assertEqual
+                            "for: orderTriple (1, 3, 2)"
+                            (1,2,3) (orderTriple (1,3,2)))
+testOrderTriple4 = TestCase(assertEqual
+                            "for: orderTriple (3, 2, 1)"
+                            (1,2,3) (orderTriple (3,2,1)))
+testOrderTriple5 = TestCase(assertEqual
+                            "for: orderTriple (1, 1, 2)"
+                            (1,1,2) (orderTriple (1,1,2)))
+testOrderTriple6 = TestCase(assertEqual
+                            "for: orderTriple (1, 2, 1)"
+                            (1,1,2) (orderTriple (1,2,1)))
+testOrderTriple7 = TestCase(assertEqual
+                            "for: orderTriple (2, 1, 1)"
+                            (1,1,2) (orderTriple (2,1,1)))
+testOrderTriple8 = TestCase(assertEqual
+                            "for: orderTriple (0,(-1), 1)"
+                            ((-1),0,1) (orderTriple (0,(-1),1)))
+
+testOrderTriple = TestList [testOrderTriple1,
+                            testOrderTriple2,
+                            testOrderTriple3,
+                            testOrderTriple4,
+                            testOrderTriple5,
+                            testOrderTriple6,
+                            testOrderTriple7,
+                            testOrderTriple8]
 
 
 

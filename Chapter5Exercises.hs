@@ -169,3 +169,39 @@ xIntercept line
     |otherwise          = (-b)/m
     where b = getB line
           m = slope line
+
+{- 5.4
+ - Define test data for the preceding exercises; explain the choices you have made
+ - in each case. Give a sample evaluation of each of your functions."
+-}
+
+-- Test with vertical line (i.e. slope = NaN)
+testXIntercept1 = TestCase(assertEqual "for xIntercept: (2,1), (2,4)"
+                                       2.0
+                                       (xIntercept ((2,1),(2,1))))
+
+-- Test with zero for x and y values for both points
+testXIntercept2 = TestCase(assertEqual "for xIntercept: (0,0), (0,0)"
+                                       0.0
+                                       (xIntercept ((0,0),(0,0))))
+
+-- Test with negative value
+testXIntercept3 = TestCase(assertEqual "for xIntercept: (-1,2), (4, 3)"
+                                       (-11.0)
+                                       (xIntercept ((-1,2),(4,3))))
+
+-- Test with line parallel to x-axis (i.e. no intersection with x-axis)
+testXIntercept4 = TestCase(assertEqual "for xIntercept: (1,2), (4,2)"
+                                       (1/0)
+                                       (xIntercept ((1,2),(4,2))))
+
+-- Test with points within standard range
+testXIntercept5 = TestCase(assertEqual "for xIntercept: (1,2), (3,4)"
+                                       0.0
+                                       (xIntercept ((1,2),(3,4))))
+
+testIntercept = TestList [testXIntercept1,
+                          testXIntercept2,
+                          testXIntercept3,
+                          testXIntercept4,
+                          testXIntercept5]

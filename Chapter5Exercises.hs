@@ -123,6 +123,49 @@ testOrderTriple = TestList [testOrderTriple1,
                             testOrderTriple7,
                             testOrderTriple8]
 
+{- 5.3
+ - Define the function which finds where a straight line crosses the x-axis. You will
+ - need to think about how to supply the information about the straight line to the
+ - function.
+-}
 
+-- Point is defined by an x and y coordinate
+type Point = (Float, Float)
 
+-- Straight line is defined by coordinates of 2 Points ((x1, y1), (x2, y2))
+type Line = (Point, Point)
 
+getX :: Point -> Float
+getX p = fst p
+
+getY :: Point -> Float
+getY p = snd p
+
+deltaX :: Line -> Float
+deltaX line = x1 - x2
+    where x1 = getX (fst line)
+          x2 = getX (snd line)
+
+deltaY :: Line -> Float
+deltaY line = y1 - y2
+    where y1 = getY (fst line)
+          y2 = getY (snd line)
+
+slope :: Line -> Float
+slope line = dy / dx
+    where dy = deltaY line
+          dx = deltaX line
+
+getB :: Line -> Float
+getB line = y - m * x
+    where y  = getY p1
+          x  = getX p1
+          m  = slope line
+          p1 = (fst line)
+
+xIntercept :: Line -> Float
+xIntercept line
+    |(deltaX line == 0) = getX (fst line)
+    |otherwise          = (-b)/m
+    where b = getB line
+          m = slope line

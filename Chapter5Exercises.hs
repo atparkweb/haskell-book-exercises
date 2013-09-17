@@ -132,7 +132,7 @@ testOrderTriple = TestList [testOrderTriple1,
 -- Point is defined by an x and y coordinate
 type Point = (Float, Float)
 
--- Straight line is defined by coordinates of 2 Points ((x1, y1), (x2, y2))
+-- Straight line is defined by 2 Points ((x1, y1), (x2, y2))
 type Line = (Point, Point)
 
 getX :: Point -> Float
